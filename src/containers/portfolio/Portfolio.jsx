@@ -4,6 +4,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 
 import Summary from './components/Summary';
 import Quotes from './components/Quotes';
+import Highchart from './components/Highchart';
 
 /*
  * TODO:
@@ -15,15 +16,35 @@ import Quotes from './components/Quotes';
 class Portfolio extends React.Component {
   constructor(props) {
     super(props);
+    this.onButtonClick = this.onButtonClick.bind(this);
+    this.selectDataset = this.selectDataset.bind(this);
+
+    const datasetSelector = 'normalized';
     this.state = {
       showSummary: true,
+      getDataSet: this.selectDataset(datasetSelector),
+      subtitle: datasetSelector,
+      unit: '%',
     };
-    this.onButtonClick = this.onButtonClick.bind(this);
   }
 
   onButtonClick(event) {
+    const datasetSelector = event.target.name === 'summary' ? 'normalized' : 'monetary';
     this.setState({
       showSummary: event.target.name === 'summary',
+      getDataSet: this.selectDataset(datasetSelector),
+      unit: event.target.name === 'summary' ? '%' : 'kr',
+      subtitle: datasetSelector,
+    });
+  }
+
+  selectDataset(selector) {
+    return () => this.props.portfolio.map((invensment) => {
+      const shit = {
+        name: invensment.name,
+        data: invensment.development.map(currentDay => [Date.parse(currentDay.date), currentDay[selector]]),
+      };
+      return shit;
     });
   }
 
@@ -34,6 +55,7 @@ class Portfolio extends React.Component {
         <Button name="detailed" onClick={this.onButtonClick}>Detailed</Button>
       </ButtonGroup>
 
+      <Highchart title="Portfolio" unit={this.state.unit} subtitle={this.state.subtitle} investments={this.state.getDataSet()} />;
       {this.state.showSummary
         ? <Summary quotes={this.props.portfolio} />
         : <Quotes quotes={this.props.portfolio} /> }
