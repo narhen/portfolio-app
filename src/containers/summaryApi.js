@@ -4,7 +4,6 @@ import { apiUrl } from '../config';
 export const getSummary = () =>
 fetch(`${apiUrl}/user/17/summary`)
 .then((response) => {
-  console.log(apiUrl);
   if (response.status >= 400) {
     throw new Error('Bad response from server!');
   }

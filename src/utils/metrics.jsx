@@ -17,3 +17,38 @@ export const percentageDevelopmentDayToDay = investment =>
 
 export const monetary = investment =>
   investment.development.map(current => [Date.parse(current.date), current.value]);
+
+const getDepositByDate = (fond, date) => {
+  const entry = fond.development.find(e => e.date === date);
+  const emptyResult = {
+    ticker: fond.ticker,
+    deposit: 0,
+  };
+
+  if (entry) {
+    return Object.assign({}, emptyResult, { deposit: entry.deposit });
+  }
+  return emptyResult;
+};
+
+
+export const groupDepositsByDate = (portfolio) => {
+  const combined = portfolio.find(el => el.name === 'Portfolio');
+  const fonds = portfolio.filter(el => el.name !== 'Portfolio');
+
+  if (!combined || !fonds) {
+    return undefined;
+  }
+
+  const res = combined.development.reduce((result, current) => {
+    if (current.deposit <= 0) {
+      return result;
+    }
+    return result.concat({
+      date: current.date,
+      deposits: fonds.map(fond => getDepositByDate(fond, current.date)),
+    });
+  }, []);
+
+  return res;
+};
