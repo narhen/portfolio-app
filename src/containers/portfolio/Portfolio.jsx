@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Button, ButtonGroup } from 'react-bootstrap';
+import { normalize, monetary } from '../../utils/metrics';
 
-import Summary from './components/Summary';
-import Quotes from './components/Quotes';
 import Highchart from './components/Highchart';
 
 /*
@@ -16,49 +15,74 @@ import Highchart from './components/Highchart';
 class Portfolio extends React.Component {
   constructor(props) {
     super(props);
-    this.onButtonClick = this.onButtonClick.bind(this);
+    this.onViewButtonClick = this.onViewButtonClick.bind(this);
     this.selectDataset = this.selectDataset.bind(this);
+    this.onPortfolioButtonClick = this.onPortfolioButtonClick.bind(this);
 
-    const datasetSelector = 'normalized';
+    const datasetSelector = normalize;
     this.state = {
       showSummary: true,
       getDataSet: this.selectDataset(datasetSelector),
-      subtitle: datasetSelector,
+      subtitle: datasetSelector.name,
       unit: '%',
+      activeButtons: new Set(['Portfolio']),
     };
   }
 
-  onButtonClick(event) {
-    const datasetSelector = event.target.name === 'summary' ? 'normalized' : 'monetary';
-    this.setState({
-      showSummary: event.target.name === 'summary',
+  onViewButtonClick(event) {
+    const showSummary = event.target.name === 'summary';
+    const datasetSelector = showSummary ? normalize : monetary;
+    this.setState(Object.assign({}, this.state, {
       getDataSet: this.selectDataset(datasetSelector),
+      showSummary,
       unit: event.target.name === 'summary' ? '%' : 'kr',
-      subtitle: datasetSelector,
-    });
+      subtitle: datasetSelector.name,
+    }));
+  }
+
+  onPortfolioButtonClick(event) {
+    const target = event.target;
+    const activeButtons = this.state.activeButtons;
+    if (activeButtons.has(target.name)) {
+      activeButtons.delete(target.name);
+    } else {
+      activeButtons.add(target.name);
+    }
+    this.setState(Object.assign({}, this.state, { activeButtons }));
   }
 
   selectDataset(selector) {
-    return () => this.props.portfolio.map((invensment) => {
+    return () => this.props.portfolio.map((investment) => {
       const shit = {
-        name: invensment.name,
-        data: invensment.development.map(currentDay => [Date.parse(currentDay.date), currentDay[selector]]),
+        name: investment.name,
+        data: selector(investment),
       };
       return shit;
-    });
+    }).filter(dataset => this.state.activeButtons.has(dataset.name));
   }
 
   render() {
+    const buttonIsActive = name => this.state.activeButtons.has(name);
+    const portfolioComponents = (<ButtonGroup>
+      {this.props.portfolio.map(component =>
+        <Button
+          key={component.name}
+          bsStyle="primary"
+          name={component.name}
+          onClick={this.onPortfolioButtonClick}
+          active={buttonIsActive(component.name)}
+        >
+          {component.ticker || component.name}
+        </Button>)}
+    </ButtonGroup>);
+
     return (<div>
       <ButtonGroup bsSize="large">
-        <Button name="summary" onClick={this.onButtonClick}>Summary</Button>
-        <Button name="detailed" onClick={this.onButtonClick}>Detailed</Button>
+        <Button name="summary" onClick={this.onViewButtonClick} active={this.state.showSummary}>Summary</Button>
+        <Button name="detailed" onClick={this.onViewButtonClick} active={!this.state.showSummary}>Detailed</Button>
       </ButtonGroup>
-
-      <Highchart title="Portfolio" unit={this.state.unit} subtitle={this.state.subtitle} investments={this.state.getDataSet()} />;
-      {this.state.showSummary
-        ? <Summary quotes={this.props.portfolio} />
-        : <Quotes quotes={this.props.portfolio} /> }
+      <Highchart title="Portfolio" unit={this.state.unit} subtitle={this.state.subtitle} investments={this.state.getDataSet()} />
+      <div>{portfolioComponents}</div>
     </div>);
   }
 }
