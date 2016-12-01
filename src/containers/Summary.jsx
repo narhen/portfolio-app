@@ -4,6 +4,7 @@ import { Table } from 'react-bootstrap';
 
 const Summary = ({ summary }) =>
   <div className="summaryTable">
+    <h1>Summary</h1>
     <Table responsive >
       <tbody>
         <tr>
