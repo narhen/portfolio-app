@@ -4,17 +4,16 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './App';
 import NoMatch from './components/NoMatch';
-import configurePortfolioRoutes from './containers/portfolio/routes';
 import * as summaryActions from './containers/summaryActions';
 import Summary from './containers/Summary';
+import Portfolio from './containers/portfolio/Portfolio';
 
 export default function (store) {
-  const portfolioRoutes = configurePortfolioRoutes(store);
   const { fetchSummaryData } = bindActionCreators(summaryActions, store.dispatch);
   return (
-    <Route path="/" component={App}>
-      <IndexRoute onEnter={fetchSummaryData} component={Summary} />
-      {portfolioRoutes}
+    <Route path="/" onEnter={fetchSummaryData} component={App}>
+      <IndexRoute component={Summary} />
+      <Route path="/portfolio(/)" component={Portfolio} />
       <Route path="*" status={404} component={NoMatch} />
     </Route>
   );

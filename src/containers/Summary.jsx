@@ -12,12 +12,15 @@ const Summary = ({ summary }) =>
           <th>Invested</th>
           <th>Return</th>
         </tr>
-        {summary.map(data => <tr key={data.ticker}>
-          <td>{data.ticker}</td>
-          <td>{data.value.toFixed(0)}</td>
-          <td>{data.deposited}</td>
-          <td>{(((data.value / data.deposited) - 1) * 100).toFixed(1)} %</td>
-        </tr>
+        {summary.map((data, i) => {
+          const value = data.development[data.development.length - 1].value;
+          return (<tr key={i}>
+            <td>{data.ticker}</td>
+            <td>{value.toFixed(0)}</td>
+            <td>{data.total_deposited}</td>
+            <td>{(((value / data.total_deposited) - 1) * 100).toFixed(1)} %</td>
+          </tr>);
+        }
     )}
       </tbody>
     </Table>

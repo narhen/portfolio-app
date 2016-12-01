@@ -52,7 +52,7 @@ class Portfolio extends React.Component {
   }
 
   selectDataset(selector) {
-    return () => this.props.portfolio.map((investment) => {
+    return () => this.props.summary.map((investment) => {
       const shit = {
         name: investment.name,
         data: selector(investment),
@@ -64,7 +64,7 @@ class Portfolio extends React.Component {
   render() {
     const buttonIsActive = name => this.state.activeButtons.has(name);
     const portfolioComponents = (<ButtonGroup>
-      {this.props.portfolio.map(component =>
+      {this.props.summary.map(component =>
         <Button
           key={component.name}
           bsStyle="primary"
@@ -76,26 +76,27 @@ class Portfolio extends React.Component {
         </Button>)}
     </ButtonGroup>);
 
-    return (<div>
-      <ButtonGroup bsSize="large">
-        <Button name="summary" onClick={this.onViewButtonClick} active={this.state.showSummary}>Summary</Button>
-        <Button name="detailed" onClick={this.onViewButtonClick} active={!this.state.showSummary}>Detailed</Button>
-      </ButtonGroup>
-      <Highchart title="Portfolio" unit={this.state.unit} subtitle={this.state.subtitle} investments={this.state.getDataSet()} />
-      <div>{portfolioComponents}</div>
-    </div>);
+    return (
+      <div>
+        <ButtonGroup bsSize="large">
+          <Button name="summary" onClick={this.onViewButtonClick} active={this.state.showSummary}>Summary</Button>
+          <Button name="detailed" onClick={this.onViewButtonClick} active={!this.state.showSummary}>Detailed</Button>
+        </ButtonGroup>
+        <Highchart title="Portfolio" unit={this.state.unit} subtitle={this.state.subtitle} investments={this.state.getDataSet()} />
+        <div>{portfolioComponents}</div>
+      </div>);
   }
 }
 
 Portfolio.propTypes = {
-  portfolio: PropTypes.arrayOf(PropTypes.shape({
+  summary: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     development: PropTypes.array.isRequired,
   })),
 };
 
 const mapStateToProps = state => Object.assign({}, state, {
-  portfolio: state.portfolio,
+  summary: state.summary,
 });
 
 export default connect(mapStateToProps)(Portfolio);
