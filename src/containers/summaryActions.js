@@ -4,7 +4,7 @@ import { getSummary } from './summaryApi';
 const setPortfolioData = createAction('SET_SUMMARY_DATA');
 
 export function fetchSummaryData() {
-  return dispatch => getSummary()
+  return (dispatch, getState) => getSummary(getState().sessiontoken)
   .then(data => dispatch(setPortfolioData(data)))
   .catch(err => console.log(err));
 }

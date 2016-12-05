@@ -4,18 +4,29 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './App';
 import NoMatch from './components/NoMatch';
-import * as summaryActions from './containers/summaryActions';
-import Summary from './containers/Summary';
 import Portfolio from './containers/portfolio/Portfolio';
 import Deposits from './components/Deposits';
+import * as summaryActions from './containers/summaryActions';
+import { Summary } from './containers/Summary';
+import { Login } from './components/login/Login';
+import SessionInitializer from './components/login/SessionInitializer';
+import Welcome from './components/WelcomePage';
 
 export default function (store) {
   const { fetchSummaryData } = bindActionCreators(summaryActions, store.dispatch);
+
   return (
-    <Route path="/" onEnter={fetchSummaryData} component={App}>
-      <IndexRoute component={Summary} />
-      <Route path="/portfolio(/)" component={Portfolio} />
-      <Route path="/deposits(/)" component={Deposits} />
+    <Route path="/" component={App}>
+      <IndexRoute component={Welcome} />
+      <Route path="/login(/)">
+        <IndexRoute component={Login} />
+        <Route path=":sessiontoken" component={SessionInitializer} />
+      </Route>
+      <Route path="/portfolio(/)" onEnter={fetchSummaryData}>
+        <IndexRoute component={Summary} />
+        <Route path="/development(/)" component={Portfolio} />
+        <Route path="/deposits(/)" component={Deposits} />
+      </Route>
       <Route path="*" status={404} component={NoMatch} />
     </Route>
   );
