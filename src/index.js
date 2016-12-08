@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import persistState from 'redux-localstorage';
 
 import './index.css';
 import configureRoutes from './routes';
@@ -13,7 +14,7 @@ import reducers from './reducers';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, {
   portfolio: [],
-}, composeEnhancers(applyMiddleware(thunk, routerMiddleware(browserHistory))));
+}, composeEnhancers(applyMiddleware(thunk, routerMiddleware(browserHistory)), persistState(['sessiontoken'], { key: 'portfolioapi' })));
 
 const routes = configureRoutes(store);
 const history = syncHistoryWithStore(browserHistory, store);
