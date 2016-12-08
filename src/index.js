@@ -14,7 +14,7 @@ import reducers from './reducers';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, {
   portfolio: [],
-}, composeEnhancers(applyMiddleware(thunk, routerMiddleware(browserHistory)), persistState(['sessiontoken'], { key: 'portfolioapi' })));
+}, composeEnhancers(applyMiddleware(thunk, routerMiddleware(browserHistory)), persistState(['sessiontoken', 'authenticated'], { key: 'portfolioapi' })));
 
 const routes = configureRoutes(store);
 const history = syncHistoryWithStore(browserHistory, store);
