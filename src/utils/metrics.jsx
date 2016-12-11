@@ -55,3 +55,19 @@ export const groupDepositsByDate = (portfolio) => {
 
   return res;
 };
+
+export const calculateWeight = (portfolio) => {
+  const total = portfolio.find(el => el.name === 'Portfolio');
+  if (!total) {
+    return [];
+  }
+
+  const totalValue = total.development[total.development.length - 1].value;
+  return portfolio.map((fond) => {
+    const ret = {
+      ticker: fond.ticker,
+      weight: fond.development[fond.development.length - 1].value / (totalValue / 100),
+    };
+    return ret;
+  });
+};
