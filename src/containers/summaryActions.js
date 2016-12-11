@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { getSummary } from './summaryApi';
+import { getSummary } from '../utils/api';
 
 const setPortfolioData = createAction('SET_SUMMARY_DATA');
 

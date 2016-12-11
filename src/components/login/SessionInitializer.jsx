@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
-import { setSessionTokenAction, setAuthenticated } from './actions';
+import { initializeSession } from './actions';
 
 class SessionInitializer extends React.Component {
   componentWillMount() {
     const { dispatch, params: { sessiontoken } } = this.props;
-    [setSessionTokenAction(sessiontoken), setAuthenticated(true), replace('/portfolio')].map(dispatch);
+    dispatch(initializeSession(sessiontoken)).then(() => dispatch(replace('/portfolio')));
   }
 
   render() {

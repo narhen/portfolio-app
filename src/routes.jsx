@@ -7,6 +7,7 @@ import NoMatch from './components/NoMatch';
 import Portfolio from './containers/portfolio/Portfolio';
 import Deposits from './components/Deposits';
 import * as summaryActions from './containers/summaryActions';
+import * as actions from './components/actions';
 import Summary from './containers/Summary';
 import { Login } from './components/login/Login';
 import SessionInitializer from './components/login/SessionInitializer';
@@ -14,6 +15,7 @@ import Welcome from './components/WelcomePage';
 
 export default function (store) {
   const { fetchSummaryData } = bindActionCreators(summaryActions, store.dispatch);
+  const { logoutUser } = bindActionCreators(actions, store.dispatch);
 
   return (
     <Route path="/" component={App}>
@@ -22,6 +24,7 @@ export default function (store) {
         <IndexRoute component={Login} />
         <Route path=":sessiontoken" component={SessionInitializer} />
       </Route>
+      <Route path="logout" onEnter={logoutUser} component={Welcome} />
       <Route path="/portfolio(/)" onEnter={fetchSummaryData}>
         <IndexRoute component={Summary} />
         <Route path="history(/)" component={Portfolio} />

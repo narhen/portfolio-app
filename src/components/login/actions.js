@@ -1,4 +1,12 @@
-import { createAction } from 'redux-actions';
+import { getUserInfo } from '../../utils/api';
+import { setAuthenticated, setSessionToken, setUserInfo } from '../actions';
 
-export const setSessionTokenAction = createAction('SET_SESSION_TOKEN');
-export const setAuthenticated = createAction('SET_AUTHENTICATED');
+export function initializeSession(sessionToken) {
+  return dispatch => getUserInfo(sessionToken)
+  .then(user => [
+    setAuthenticated(true),
+    setSessionToken(sessionToken),
+    setUserInfo(user),
+  ].map(dispatch))
+  .catch(error => console.log(error));
+}
