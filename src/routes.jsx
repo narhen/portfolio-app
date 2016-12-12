@@ -11,7 +11,7 @@ import * as actions from './components/actions';
 import Summary from './containers/Summary';
 import { Login } from './components/login/Login';
 import SessionInitializer from './components/login/SessionInitializer';
-import Welcome from './components/WelcomePage';
+import Welcome from './components/Welcome';
 
 export default function (store) {
   const { fetchSummaryData } = bindActionCreators(summaryActions, store.dispatch);
