@@ -31,7 +31,7 @@ class RenderFonds extends React.Component {
         return (<li key={index}>
           <Field name={`${fond}.ticker`} component={renderField} label="ticker" type="text" onClick={onClick} />
           <Field name={`${fond}.amount`} component={renderField} label="amount" type="number" normalize={toNumber} onClick={onClick} />
-          <button type="button" onClick={() => fields.remove(index)}>Remove</button>
+          {index > 0 && <button type="button" onClick={() => fields.remove(index)}>Remove</button>}
         </li>);
       }
     )}

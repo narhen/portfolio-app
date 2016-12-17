@@ -14,7 +14,10 @@ import reducers from './reducers';
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, {
-  portfolio: [],
+  summary: [],
+  user: {},
+  authenticated: false,
+  sessiontoken: '',
 }, composeEnhancers(applyMiddleware(thunk, routerMiddleware(browserHistory)), persistState(['sessiontoken', 'user', 'authenticated'], { key: 'portfolioapi' })));
 
 const routes = configureRoutes(store);
