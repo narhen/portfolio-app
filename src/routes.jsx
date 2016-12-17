@@ -5,7 +5,7 @@ import { Route, IndexRoute } from 'react-router';
 import App from './App';
 import NoMatch from './components/NoMatch';
 import Portfolio from './containers/portfolio/Portfolio';
-import Deposits from './components/Deposits';
+import Deposits from './components/deposit/Deposit';
 import * as summaryActions from './containers/summaryActions';
 import * as actions from './components/actions';
 import Summary from './containers/Summary';

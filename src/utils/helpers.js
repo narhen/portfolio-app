@@ -22,3 +22,12 @@ export function fetchAuthorized(path) {
     method: 'GET',
   }).then(resolveJsonOrRejectWithError);
 }
+
+export function putAuthorized(path) {
+  const url = apiResourceUrl(path);
+  return (sessionToken, body) => fetch(url, {
+    headers: { 'api-key': sessionToken, 'Content-Type': 'application/json' },
+    method: 'PUT',
+    body: JSON.stringify(body),
+  }).then(resolveJsonOrRejectWithError);
+}
