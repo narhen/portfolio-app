@@ -31,3 +31,12 @@ export function putAuthorized(path) {
     body: JSON.stringify(body),
   }).then(resolveJsonOrRejectWithError);
 }
+
+export function deleteAuthorized(path) {
+  const url = apiResourceUrl(path);
+  return (sessionToken, body) => fetch(url, {
+    headers: { 'api-key': sessionToken, 'Content-Type': 'application/json' },
+    method: 'DELETE',
+    body: JSON.stringify(body),
+  }).then(resolveJsonOrRejectWithError);
+}
