@@ -58,7 +58,7 @@ export const groupDepositsByDate = (portfolio) => {
 
 export const calculateWeight = (portfolio) => {
   const total = portfolio.find(el => el.name === 'Portfolio');
-  if (!total) {
+  if (!total || total.development.length === 0) {
     return [];
   }
 
