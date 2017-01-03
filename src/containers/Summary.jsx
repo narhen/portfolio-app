@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { calculateWeight } from '../utils/metrics';
+import AddFond from '../components/AddFond';
+import { addFond } from './summaryActions';
 
-const Summary = ({ summary }) => {
+const Summary = ({ summary, dispatch }) => {
   const weights = calculateWeight(summary);
   const getWeightForTicker = (ticker) => {
     const weight = weights.find(x => x.ticker === ticker);
@@ -21,6 +23,7 @@ const Summary = ({ summary }) => {
 
   return (<div className="summaryTable">
     <h1>Summary</h1>
+    <AddFond onSubmit={data => dispatch(addFond(data))} />
     <Table responsive >
       <tbody>
         <tr>
@@ -47,10 +50,12 @@ const Summary = ({ summary }) => {
 };
 
 Summary.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   summary: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => Object.assign({}, state, {
+  dispatch: state.dispatch,
   summary: state.summary,
 });
 

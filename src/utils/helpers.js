@@ -32,6 +32,15 @@ export function putAuthorized(path) {
   }).then(resolveJsonOrRejectWithError);
 }
 
+export function postAuthorized(path) {
+  const url = apiResourceUrl(path);
+  return (sessionToken, body) => fetch(url, {
+    headers: { 'api-key': sessionToken, 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(body),
+  }).then(resolveJsonOrRejectWithError);
+}
+
 export function deleteAuthorized(path) {
   const url = apiResourceUrl(path);
   return (sessionToken, body) => fetch(url, {
