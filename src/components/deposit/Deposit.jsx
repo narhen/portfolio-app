@@ -2,20 +2,15 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { keys } from 'lodash/object';
-import { groupDepositsByDate } from '../../utils/metrics';
+import { groupDepositsByDate, mapSummaryToTickerNames } from '../../utils/metrics';
 import AddDeposit from './AddDeposit';
 import { makeDeposit, deleteDeposit } from './actions';
 
-const Deposits = ({ deposits, dispatch }) => {
-  if (deposits.length < 1) {
-    return null;
-  }
-
+const Deposits = ({ deposits, tickers, dispatch }) => {
   const removeEmptyObjects = array => array.filter(entry => keys(entry).length > 0);
   const deleteRow = (date, tickersWithDeposits) =>
    () => dispatch(deleteDeposit({ date, tickers: tickersWithDeposits }));
 
-  const tickers = deposits[0].deposits.map(x => x.ticker);
   const tickerHeaders = tickers.map((ticker, i) => <th key={i}>{ticker}</th>);
   const rows = deposits.map((row, i) => {
     const cells = row.deposits.map(cell => <td key={cell.ticker}>{cell.deposit}</td>);
@@ -55,10 +50,12 @@ const Deposits = ({ deposits, dispatch }) => {
 Deposits.propTypes = {
   dispatch: PropTypes.func.isRequired,
   deposits: PropTypes.array.isRequired,
+  tickers: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => Object.assign({}, state, {
   dispatch: state.dispatch,
+  tickers: mapSummaryToTickerNames(state.summary),
   deposits: groupDepositsByDate(state.summary),
 });
 

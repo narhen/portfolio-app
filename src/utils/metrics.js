@@ -71,3 +71,6 @@ export const calculateWeight = (portfolio) => {
     return ret;
   });
 };
+
+export const mapSummaryToTickerNames = summary =>
+  summary.map(entry => entry.ticker).filter(ticker => ticker !== 'Portfolio');
