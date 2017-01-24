@@ -13,7 +13,13 @@ const Deposits = ({ deposits, tickers, dispatch }) => {
 
   const tickerHeaders = tickers.map((ticker, i) => <th key={i}>{ticker}</th>);
   const rows = deposits.map((row, i) => {
-    const cells = row.deposits.map(cell => <td key={cell.ticker}>{cell.deposit}</td>);
+    const cells = row.deposits.map((cell, j) => {
+      if (cell.deposit > 0) {
+        const color = cell.devel < 0 ? 'red' : 'green';
+        return <td key={j}>{cell.deposit} <font color={color}>{cell.devel.toFixed(2)} ({cell.valueToday.toFixed(0)})</font></td>;
+      }
+      return <td key={j} />;
+    });
     const tickersWithDeposits = row.deposits.reduce((array, current) => {
       if (current.deposit > 0) {
         return array.concat(current.ticker);

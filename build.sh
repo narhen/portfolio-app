@@ -1,4 +1,4 @@
 #!/bin/bash
 
 npm run build
-docker build -t portfolio-app:$(git rev-parse --short HEAD) .
+docker build --build-arg -t portfolio-app:$(git rev-parse --short HEAD) .

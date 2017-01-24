@@ -22,6 +22,14 @@ export const getTotal = (investments) => {
   console.log(investments);
 };
 
+const compareTodayWithAnotherDay = (today, anotherDay) => {
+  const devel = (today.quote.close / anotherDay.quote.close);
+  return {
+    valueToday: anotherDay.deposit * devel,
+    devel: (devel - 1) * 100,
+  };
+};
+
 const getDepositByDate = (fond, date) => {
   const entry = fond.development.find(e => e.date === date);
   const emptyResult = {
@@ -30,7 +38,12 @@ const getDepositByDate = (fond, date) => {
   };
 
   if (entry) {
-    return Object.assign({}, emptyResult, { deposit: entry.deposit === 0 ? '' : entry.deposit });
+    const worthToday = compareTodayWithAnotherDay(fond.development[fond.development.length - 1], entry);
+    return Object.assign({}, emptyResult, {
+      deposit: entry.deposit === 0 ? '' : entry.deposit,
+      valueToday: worthToday.valueToday,
+      devel: worthToday.devel,
+    });
   }
   return emptyResult;
 };
